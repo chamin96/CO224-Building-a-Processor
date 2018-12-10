@@ -46,25 +46,25 @@ endmodule
 //--------------------------------------------------------------------ALU module
 module ALU(A,B,C,out,cout);
 
-	input [3:0] A,B;
+	input [7:0] A,B;
 	input [2:0] C;
 
-	output [3:0] out;
+	output [7:0] out;
     output cout;
 
 
-	wire [3:0] a_2s,b_2s;
-	wire [3:0] AplusB,AminB;
-	wire [3:0] AandB,AorB;
-	wire [3:0] AmultiB;
-	wire [3:0] X_OR;
+	wire [7:0] a_2s,b_2s;
+	wire [7:0] AplusB,AminB;
+	wire [7:0] AandB,AorB;
+	wire [7:0] AmultiB;
+	wire [7:0] X_OR;
 	
 
 	two_sComp tc1(A,a_2s);  //2s complement of A
 	
 	two_sComp tc2(B,b_2s);  //2s complement of B
 
-	adder4bit fba1(A,B,1'b0,AplusB,cout);   //+
+	adder8bit fba1(A,B,1'b0,AplusB,cout);   //+
 	
 	substractor s1(A,B,AminB);  //-
 
@@ -91,45 +91,53 @@ endmodule
 //-----------------------------not module
 module inverter(x, notx);
 
-	input [3:0] x;
-	output [3:0] notx;
+	input [7:0] x;
+	output [7:0] notx;
 	
 	not (notx[0], x[0]);
 	not (notx[1], x[1]);
 	not (notx[2], x[2]);
 	not (notx[3], x[3]);
-	
+	not (notx[4], x[4]);
+	not (notx[5], x[5]);
+	not (notx[6], x[6]);
+	not (notx[7], x[7]);
+
 endmodule
 //---------------------------------------------------------------------------------------------
 
 //-----------------------------2s complement
 module two_sComp(a,out);			
 
-	input [3:0] a;
-	output [3:0] out;
-	wire [3:0] na;
+	input [7:0] a;
+	output [7:0] out;
+	wire [7:0] na;
 	wire cout;
 
 	inverter in1(a,na);
-	adder4bit fba2(na,1'b1,1'b0,out,cout);
+	adder8bit fba2(na,1'b1,1'b0,out,cout);
 
 endmodule
 //---------------------------------------------------------------------------------------------
 
 //---------------------------------------4-bit adder
-module adder4bit(a,b,cin,s,cout);
+module adder8bit(a,b,cin,s,cout);
 
-	input[3:0] a, b; input cin;
-	output [3:0] s; output cout;
+	input  [7:0] a, b; input cin;
+	output [7:0] s; output cout;
 
-	wire cout1, cout2, cout3;
+	wire cout1, cout2, cout3, cout4, cout5, cout6, cout7;
 
 
 
 	FullAdder fa0(a[0],b[0],cin,s[0],cout1);
 	FullAdder fa1(a[1],b[1],cout1,s[1],cout2);
 	FullAdder fa2(a[2],b[2],cout2,s[2],cout3);
-	FullAdder fa3(a[3],b[3],cout3,s[3],cout);
+	FullAdder fa3(a[3],b[3],cout3,s[3],cout4);
+	FullAdder fa3(a[4],b[4],cout4,s[4],cout5);
+	FullAdder fa3(a[5],b[5],cout5,s[5],cout6);
+	FullAdder fa3(a[6],b[6],cout6,s[6],cout7);
+	FullAdder fa3(a[7],b[7],cout7,s[7],cout);
 
 
 endmodule
@@ -166,7 +174,7 @@ module substractor(a,b,out);
 	wire cout;
 
 	two_sComp tc3(b,tcb);
-	adder4bit fba3(a,tcb,1'b0,out,cout);
+	adder8bit fba3(a,tcb,1'b0,out,cout);
 	
 
 endmodule
