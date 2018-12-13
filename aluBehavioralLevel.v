@@ -5,6 +5,33 @@
     control = 3 bit
     https://vlsicoding.blogspot.com/2013/10/design-4-bit-alu-in-verilog.html
 */
+module testbench;
+	reg [7:0] DATA1,DATA2;	//Inputs
+	reg [2:0] SELECT;		//Control Input
+	wire [7:0] RESULT;		//Output
+
+	alu ALU(RESULT,DATA1,DATA2,SELECT);	
+
+	initial 
+	begin 
+		DATA1=8'b00000101;
+		DATA2=8'b00000011;
+
+		SELECT=3'b000;
+		#1 $display("FORWARD : Input value = %d , FORWARD value = %d",DATA1,RESULT);
+		SELECT=3'b001;
+		#1 $display("ADD : %d + %d = %d",DATA1,DATA2,RESULT);
+		SELECT=3'b010;
+		#1 $display("AND : %b and %b = %b",DATA1,DATA2,RESULT);
+		SELECT=3'b011;
+		#1 $display("OR : %b or %b = %b",DATA1,DATA2,RESULT);
+        SELECT=3'b111;
+        #1 $display("DEFAULT CASE: %d",RESULT);
+
+
+	end
+endmodule
+
 
 module alu(RESULT,DATA1,DATA2,SELECT);
     output reg [7:0] RESULT;
@@ -34,3 +61,5 @@ module alu(RESULT,DATA1,DATA2,SELECT);
                     RESULT = 8'b00000000;
         endcase
     end
+
+endmodule
