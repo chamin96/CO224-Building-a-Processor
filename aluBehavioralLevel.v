@@ -3,8 +3,8 @@
     src1    = 8 bit
     src 2   = 8 bit
     control = 3 bit
-    https://vlsicoding.blogspot.com/2013/10/design-4-bit-alu-in-verilog.html
 */
+
 module testbench;
 	reg [7:0] DATA1,DATA2;	//Inputs
 	reg [2:0] SELECT;		//Control Input
@@ -27,8 +27,6 @@ module testbench;
 		#1 $display("OR : %b or %b = %b",DATA1,DATA2,RESULT);
         SELECT=3'b111;
         #1 $display("DEFAULT CASE: %d",RESULT);
-
-
 	end
 endmodule
 
