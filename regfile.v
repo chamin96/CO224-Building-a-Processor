@@ -11,20 +11,17 @@ module testbench();
         clk = 1;       // initial value of clock
         reset = 0;       // initial value of reset
         ctrl = 0;
-        @(negedge clk) INaddr = 0;
-        OUT1addr = 0;
-        OUT2addr = 1;
-        @(negedge clk) IN = 22;
+        
+        #5 @(negedge clk) ctrl = 1;
+        #5 @(negedge clk) IN = 22;
+        #5 @(negedge clk) INaddr = 2;
 
 
 
-        #5 @(posedge clk) ctrl=1;
-        #6 IN = 32;
-        #10 INaddr = 2;
-        #15 OUT1addr = 2;
-        #18 OUT2addr = 4;
-        #5 reset = 1;    // Assert the reset
-        #10 reset = 0;   // De-assert the reset
+        #10 @(posedge clk) ctrl=0;
+        #10 @(posedge clk) OUT1addr = 2;
+        #10 OUT2addr = 4;
+
         #5 $finish;      // Terminate simulation
     end
 
@@ -56,28 +53,28 @@ module regfile8x8a(IN, OUT1, OUT2, INaddr, OUT1addr, OUT2addr, CLK, RESET, CTRL)
       if (CTRL==0)  begin
         case (INaddr)
             0: begin 
-                register0 <= IN;
+                register0 = IN;
             end
             1: begin 
-                register1 <= IN;
+                register1 = IN;
             end
             2: begin 
-                register2 <= IN;
+                register2 = IN;
             end
             3: begin 
-                register3 <= IN;
+                register3 = IN;
             end
             4: begin 
-                register4 <= IN;
+                register4 = IN;
             end
             5: begin 
-                register5 <= IN;
+                register5 = IN;
             end
             6: begin 
-                register6 <= IN;
+                register6 = IN;
             end
             7: begin 
-                register7 <= IN;
+                register7 = IN;
             end
         endcase // case (wrAddr)
         end
@@ -89,28 +86,28 @@ module regfile8x8a(IN, OUT1, OUT2, INaddr, OUT1addr, OUT2addr, CLK, RESET, CTRL)
         //OUT1
         case (OUT1addr)
           0: begin
-            OUT1 <= register0;
+            OUT1 = register0;
           end
           1: begin
-            OUT1 <= register1;
+            OUT1= register1;
           end
           2: begin
-            OUT1 <= register2;
+            OUT1 = register2;
           end
           3: begin
-            OUT1 <= register3;
+            OUT1 = register3;
           end
           4: begin
-            OUT1 <= register4;
+            OUT1 = register4;
           end
           5: begin
-            OUT1 <= register5;
+            OUT1 = register5;
           end
           6: begin
-            OUT1 <= register6;
+            OUT1 = register6;
           end
           7: begin
-            OUT1 <= register7;
+            OUT1 = register7;
           end
           default:
             OUT1 <= 0;
@@ -118,28 +115,28 @@ module regfile8x8a(IN, OUT1, OUT2, INaddr, OUT1addr, OUT2addr, CLK, RESET, CTRL)
         //OUT2
         case (OUT2addr)
           0: begin
-            OUT2 <= register0;
+            OUT2 = register0;
           end
           1: begin
-            OUT2 <= register1;
+            OUT2 = register1;
           end
           2: begin
-            OUT2 <= register2;
+            OUT2 = register2;
           end
           3: begin
-            OUT2 <= register3;
+            OUT2 = register3;
           end
           4: begin
-            OUT2 <= register4;
+            OUT2 = register4;
           end
           5: begin
-            OUT2 <= register5;
+            OUT2 = register5;
           end
           6: begin
-            OUT2 <= register6;
+            OUT2 = register6;
           end
           7: begin
-            OUT2 <= register7;
+            OUT2 = register7;
           end
           default:
             OUT2 <= 0;
