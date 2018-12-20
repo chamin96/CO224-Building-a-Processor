@@ -1,3 +1,43 @@
+module testbench();
+    reg clk,ctrl,reset;
+    wire [7:0] OUT1,OUT2;
+    reg [7:0] IN;
+    reg [2:0] INaddr,OUT1addr,OUT2addr;
+
+    // Initialize all variables
+    initial begin        
+        $display ("time\t clk reset ctrl in out1 out2");	
+        $monitor ("%g\t  %d    %d   %d   %d  %d  %d", $time, clk, reset, ctrl, IN, OUT1, OUT2);	
+        clk = 1;       // initial value of clock
+        reset = 0;       // initial value of reset
+        ctrl = 0;
+        @(negedge clk) INaddr = 0;
+        OUT1addr = 0;
+        OUT2addr = 1;
+        @(negedge clk) IN = 22;
+
+
+
+        #5 @(posedge clk) ctrl=1;
+        #6 IN = 32;
+        #10 INaddr = 2;
+        #15 OUT1addr = 2;
+        #18 OUT2addr = 4;
+        #5 reset = 1;    // Assert the reset
+        #10 reset = 0;   // De-assert the reset
+        #5 $finish;      // Terminate simulation
+    end
+
+    // Clock generator
+    always begin
+        #5 clk = ~clk; // Toggle clock every 5 ticks
+    end
+
+    //connect reg-file with testbench
+    regfile8x8a regF(IN, OUT1, OUT2, INaddr, OUT1addr, OUT2addr, clk, reset, ctrl);
+
+endmodule
+
 module regfile8x8a(IN, OUT1, OUT2, INaddr, OUT1addr, OUT2addr, CLK, RESET, CTRL);
     input [7:0] IN;
     output reg [7:0] OUT1;
