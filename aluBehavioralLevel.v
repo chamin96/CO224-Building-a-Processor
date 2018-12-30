@@ -1,19 +1,21 @@
 /*  op-code = 8 bit
     dest    = 8 bit
     src1    = 8 bit
-    src 2   = 8 bit
+    src2   = 8 bit
     control = 3 bit
 */
 
+
+//testbench
 module testbench;
 	reg [7:0] DATA1,DATA2;	//Inputs
 	reg [2:0] SELECT;		//Control Input
 	wire [7:0] RESULT;		//Output
 
-	alu ALU(RESULT,DATA1,DATA2,SELECT);	
+	alu ALU(RESULT,DATA1,DATA2,SELECT);
 
-	initial 
-	begin 
+	initial
+	begin
 		DATA1=8'b00000101;
 		DATA2=8'b00000011;
 
@@ -25,12 +27,12 @@ module testbench;
 		#1 $display("AND : %b and %b = %b",DATA1,DATA2,RESULT);
 		SELECT=3'b011;
 		#1 $display("OR : %b or %b = %b",DATA1,DATA2,RESULT);
-        SELECT=3'b111;
-        #1 $display("DEFAULT CASE: %d",RESULT);
+    SELECT=3'b111;
+    #1 $display("DEFAULT CASE: %d",RESULT);
 	end
 endmodule
 
-
+//alu module
 module alu(RESULT,DATA1,DATA2,SELECT);
     output reg [7:0] RESULT;
     input [7:0] DATA1,DATA2;
