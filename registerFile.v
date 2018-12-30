@@ -1,5 +1,5 @@
 // ******** Test Register File ********
-module testregeter;
+module testbench;
 
 	reg [2:0] INaddr,OUT1addr,OUT2addr;
 	reg clk;
@@ -7,7 +7,7 @@ module testregeter;
 	wire [7:0] OUT1,OUT2;
 	wire [7:0] RESULT;
 
-	registerFile regf ( clk, INaddr, IN, OUT1addr, OUT1, OUT2addr, OUT2);
+	regfile8x8a regf ( clk, INaddr, IN, OUT1addr, OUT1, OUT2addr, OUT2);
 	initial begin
 	clk = 1'b0; end
 	always #10 clk = ~clk;
@@ -34,19 +34,22 @@ module testregeter;
 endmodule
 
 // ******** Register File ********
-module registerFile ( clk, INaddr, IN, OUT1addr, OUT1, OUT2addr, OUT2);
+module regfile8x8a ( clk, INaddr, IN, OUT1addr, OUT1, OUT2addr, OUT2);
 
 	input [2:0] OUT1addr,OUT2addr,INaddr;
 	input [7:0] IN;
 	input clk;
-	output [7:0] OUT1,OUT2;
+	output reg [7:0] OUT1,OUT2;
 
 	reg [63:0] regMemory = 0;
 	reg [7:0] OUT1reg, OUT2reg;
 	integer i;
 
-	assign OUT1 = OUT1reg[7:0];
-	assign OUT2 = OUT2reg[7:0];
+	always @ ( * ) begin
+		OUT1 = OUT1reg[7:0];
+		OUT2 = OUT2reg[7:0];
+	end
+
 
 	always @(posedge clk) begin
 		for(i=0;i<8;i=i+1) begin
