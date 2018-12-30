@@ -1,3 +1,11 @@
+/*
+	   __________4-bit Combinational ALU__________
+	               E/15/154 | E/15/142
+             _____________________________
+		             CO224-Lab5
+*/
+
+//2's complement
 module two_s_complement (IN,OUT);
   input signed [7:0] IN;
   output signed [7:0] OUT;
@@ -6,6 +14,7 @@ module two_s_complement (IN,OUT);
 
 endmodule //two_s_complement
 
+//2:1 Multiplexer
 module mux (IN1,IN2,SELECT,OUT,CLK);
   input [7:0] IN1,IN2;
   input SELECT,CLK;
@@ -21,6 +30,11 @@ module mux (IN1,IN2,SELECT,OUT,CLK);
 
 endmodule //mux 2 to 1
 
+
+
+/*
+  ____TEST-BENCHES_____
+*/
 module testbench_for_two_s;
   reg [7:0] IN;
   wire [7:0] OUT;
