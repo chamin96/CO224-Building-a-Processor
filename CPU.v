@@ -33,13 +33,13 @@ endmodule //mux 2 to 1
 //Program Counter
 module PC (RESET,CLK,COUNT);
   input RESET,CLK;
-  output reg COUNT;
+  output reg [7:0] COUNT;
 
   always @ (negedge CLK) begin
     case (RESET)
       0: COUNT=COUNT+1;
       1: COUNT=0;
-      default: COUNT=COUNT;
+      default: COUNT<=COUNT;
     endcase
   end
 
@@ -100,13 +100,14 @@ module testbench_for_PC;
   initial begin
   //initial values
     RESET=0;
-    COUNT=5;
+    COUNT=0;
     CLK=0;
   //time=3
     #3 $display("Counter = %d",COUNT);
   //time=6
     #6 $display("Counter = %d",COUNT);
   //time=9
+    #9 RESET=1;
     #9 $display ("Counter = %d",COUNT);
   //time=12
     #12 $display ("Counter = %d",COUNT);

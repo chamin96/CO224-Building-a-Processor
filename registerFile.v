@@ -1,4 +1,10 @@
-// ******** Test Register File ********
+/*
+	 ____________Register File_____________
+	         E/15/154 | E/15/142
+      _____________________________
+              CO224-Lab5
+*/
+
 module testbench;
 
 	reg [2:0] INaddr,OUT1addr,OUT2addr;
