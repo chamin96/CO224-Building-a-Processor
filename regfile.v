@@ -1,3 +1,4 @@
+//TEST BENCH
 module testbench();
     reg clk,ctrl,reset;
     wire [7:0] OUT1,OUT2;
@@ -62,6 +63,8 @@ module testbench();
 
 endmodule
 
+
+//REGISTER FILE
 module regfile8x8a(IN, OUT1, OUT2, INaddr, OUT1addr, OUT2addr, CLK, RESET, CTRL);
     input [7:0] IN;
     output reg [7:0] OUT1;
