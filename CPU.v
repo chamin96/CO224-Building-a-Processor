@@ -11,16 +11,17 @@ module two_s_complement (IN,OUT);
   output signed [7:0] OUT;
 
   assign OUT = ~IN + 8'b00000001;
+  //assign OUT [7:0] = -IN [7:0];
 
 endmodule //two_s_complement
 
 //2:1 Multiplexer
-module mux (IN1,IN2,SELECT,OUT,CLK);
+module mux (IN1,IN2,SELECT,OUT,clk);
   input [7:0] IN1,IN2;
-  input SELECT,CLK;
+  input SELECT,clk;
   output reg [7:0] OUT;
 
-  always @ (negedge CLK) begin
+  always @ (negedge clk) begin
     case (SELECT)
       0: OUT<=IN1;
       1: OUT<=IN2;
@@ -31,15 +32,15 @@ module mux (IN1,IN2,SELECT,OUT,CLK);
 endmodule //mux 2 to 1
 
 //Program Counter
-module PC (RESET,CLK,COUNT);
-  input RESET,CLK;
-  output reg [7:0] COUNT;
+module counter (clk,reset,Read_addr);
+  input reset,clk;
+  output reg [7:0] Read_addr;
 
-  always @ (negedge CLK) begin
-    case (RESET)
-      0: COUNT=COUNT+1;
-      1: COUNT=0;
-      default: COUNT<=COUNT;
+  always @ (negedge clk) begin
+    case (reset)
+      0: Read_addr=Read_addr+1;
+      1: Read_addr=0;
+      default: Read_addr=Read_addr;
     endcase
   end
 
@@ -56,18 +57,18 @@ module testbench_for_two_s;
 
   initial begin
     IN=8'b00000010;
-    #1 $display ("2s complement of %b is %b.",IN,OUT);
+    #1 $display ("2s complement of %d is %d.",IN,OUT);
   end
 endmodule // testbench_for_two_s
 
 module testbench_for_mux;
   reg [7:0] IN1,IN2;
   wire [7:0] OUT;
-  reg SELECT,CLK;
+  reg SELECT,clk;
 
   initial begin
   //initial values
-    CLK=0;
+    clk=0;
     SELECT=0;
     IN1=5;
     IN2=10;
@@ -86,37 +87,39 @@ module testbench_for_mux;
 
   // Clock generator
   always begin
-    #5 CLK = ~CLK; // Toggle clock every 5 ticks
+    #5 clk = ~clk; // Toggle clock every 5 ticks
   end
 
-  mux two_to_one_mux(IN1,IN2,SELECT,OUT,CLK);
+  mux two_to_one_mux(IN1,IN2,SELECT,OUT,clk);
 
 endmodule // testbench_for_mux
 
-module testbench_for_PC;
-  reg RESET,CLK;
-  reg COUNT;
-
-  initial begin
-  //initial values
-    RESET=0;
-    COUNT=0;
-    CLK=0;
-  //time=3
-    #3 $display("Counter = %d",COUNT);
-  //time=6
-    #6 $display("Counter = %d",COUNT);
-  //time=9
-    #9 RESET=1;
-    #9 $display ("Counter = %d",COUNT);
-  //time=12
-    #12 $display ("Counter = %d",COUNT);
-    $finish;
-  end
-
-  // Clock generator
-  always begin
-    #5 CLK = ~CLK; // Toggle clock every 5 ticks
-  end
-
-endmodule // testbench_for_PC
+// module testbench_for_PC;
+//   reg reset,clk;
+//   wire [7:0] Read_addr;
+//
+//   initial begin
+//   //initial values
+//     reset=0;
+//     Read_addr=8'd3;
+//     clk=0;
+//   //time=3
+//     #3 $display("Counter = %d",Read_addr);
+//   //time=6
+//     #6 $display("Counter = %d",Read_addr);
+//   //time=9
+//     #9 reset=1;
+//     #9 $display ("Counter = %d",Read_addr);
+//   //time=12
+//     #12 $display ("Counter = %d",Read_addr);
+//     $finish;
+//   end
+//
+//   // Clock generator
+//   always begin
+//     #5 clk = ~clk; // Toggle clock every 5 ticks
+//   end
+//
+//   counter pc(clk,reset,Read_addr);
+//
+// endmodule // testbench_for_PC
