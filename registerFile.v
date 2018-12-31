@@ -39,7 +39,7 @@ module testbench;
 	end
 endmodule
 
-// ******** Register File ********
+// Register File
 module regfile8x8a ( clk, INaddr, IN, OUT1addr, OUT1, OUT2addr, OUT2);
 
 	input [2:0] OUT1addr,OUT2addr,INaddr;
