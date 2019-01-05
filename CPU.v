@@ -78,7 +78,6 @@ module two_s_complement (OUT,IN);
   output signed [7:0] OUT;
 
   assign OUT = ~IN + 8'b00000001;
-  //assign OUT [7:0] = -IN [7:0];
 
 endmodule //two_s_complement
 
@@ -132,7 +131,7 @@ reg as_MUX,im_MUX;
 
 always @(instruction)
   begin
-  
+
     assign select = instruction[26:24];
     assign Im_val = instruction[7:0];
     assign OUT1addr = instruction[2:0];
@@ -168,7 +167,7 @@ module Instruction_reg (clk,Read_Addr,instruction);
     instruction = Read_Addr;
   end
 
-endmodule // Instruction_reg
+endmodule // Instruction Regiter
 
 module Processor( Read_Addr, Result, clk );
 
@@ -216,35 +215,35 @@ module test;
 	//									00000000
 	//											00000000
 		Read_Addr = 32'b0000000000000100xxxxxxxx11111111;//loadi 4,X,0xFF
-	#20
+	#40
 		$display("load r4        %b | %d",Result,Result);
 
 		Read_Addr = 32'b0000000000000110xxxxxxxx10101010;//loadi 6,X,0xAA
-	#20
+	#40
 		$display("load r6        %b | %d",Result,Result);
 
 		Read_Addr = 32'b0000000000000011xxxxxxxx10111011;//loadi 3,X,0xBB
-	#20
+	#40
 		$display("load r3        %b | %d",Result,Result);
 
 		Read_Addr = 32'b00000001000001010000011000000011;//add 5,6,3
-	#20
+	#40
 		$display("add r5 (r6+r3) %b | %d  ****",Result,Result);
 
 		Read_Addr = 32'b00000010000000010000010000000101;//and 1,4,5
-	#20
+	#40
 		$display("and r1 (r4,r5) %b | %d",Result,Result);
 
 		Read_Addr = 32'b00000011000000100000000100000110;//or 2,1,6
-	#20
+	#40
 		$display("or r2 (r1,r6)  %b | %d",Result,Result);
 
 		Read_Addr = 32'b0000100000001111xxxxxxxx00000010;//mov 7,X,2
-	#20
+	#40
 		$display("copy r7 (r2)   %b | %d",Result,Result);
 
 		Read_Addr = 32'b00001001000001000000111100000011;//sub 4,7,3
-	#20
+	#40
 		$display("sub r4 (r7-r3) %b | %d",Result,Result);
 
 	// Operation set 2
@@ -253,35 +252,35 @@ module test;
 		$display("---------------------------------");
 
 		Read_Addr = 32'b0000000000000100xxxxxxxx00001101;//loadi 4,X,0xFF
-	#20
+	#40
 		$display("load r4        %b | %d",Result,Result);
 
 		Read_Addr = 32'b0000000000000110xxxxxxxx00101101;//loadi 6,X,0xAA
-	#20
+	#40
 		$display("load r6        %b | %d",Result,Result);
 
 		Read_Addr = 32'b0000000000000011xxxxxxxx00100001;//loadi 3,X,0xBB
-	#20
+	#40
 	$display("load r3        %b | %d",Result,Result);
 
 		Read_Addr = 32'b00000001000001010000011000000011;//add 5,6,3
-	#20
+	#40
 		$display("add r5 (r3+r6) %b | %d",Result,Result);
 
 		Read_Addr = 32'b00000010000000010000010000000101;//and 1,4,5
-	#20
+	#40
 		$display("and r1 (r4,r5) %b | %d",Result,Result);
 
 		Read_Addr = 32'b00000011000000100000000100000110;//or 2,1,6
-	#20
+	#40
 		$display("or r2 (r1,r6)  %b | %d",Result,Result);
 
 		Read_Addr = 32'b0000100000001111xxxxxxxx00000010;//mov 7,X,2
-	#20
+	#40
 		$display("move r7 (r2)   %b | %d",Result,Result);
 
 		Read_Addr = 32'b00001001000001000000111100000011;//sub 4,7,3
-	#20
+	#40
 		$display("sub r4 (r7-r3) %b | %d",Result,Result);
 
 		$finish;
