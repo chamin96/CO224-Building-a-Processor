@@ -38,7 +38,7 @@ module alu(RESULT,DATA1,DATA2,SELECT);
     input [7:0] DATA1,DATA2;
     input [2:0] SELECT;
 
-    always @(*)
+    always @(DATA1,DATA2,SELECT)
     begin
         case (SELECT)
             3'b000:
@@ -56,6 +56,14 @@ module alu(RESULT,DATA1,DATA2,SELECT);
             3'b011:
                 begin
                     RESULT = DATA1 | DATA2; //OR
+                end
+            3'b100:
+                begin
+                    RESULT = DATA1; //load
+                end
+            3'b101:
+                begin
+                    RESULT = DATA1; //store
                 end
             default:
                     RESULT = 8'b00000000;

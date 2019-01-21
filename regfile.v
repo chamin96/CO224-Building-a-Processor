@@ -65,7 +65,7 @@ endmodule
 
 
 //REGISTER FILE
-module regfile8x8a(IN, OUT1, OUT2, INaddr, OUT1addr, OUT2addr, CLK, RESET, CTRL);
+module regfile8x8a(CLK, INaddr, IN, OUT1addr, OUT1, OUT2addr, OUT2, busy_wait);
     input [7:0] IN;
     output reg [7:0] OUT1;
     output reg [7:0] OUT2;
@@ -73,29 +73,13 @@ module regfile8x8a(IN, OUT1, OUT2, INaddr, OUT1addr, OUT2addr, CLK, RESET, CTRL)
     input [2:0] OUT1addr;
     input [2:0] OUT2addr;
     input CLK;
-    input RESET;
-    input CTRL;
+    input busy_wait;
 
     reg [7:0] 	 register0, register1, register2, register3, register4, register5, register6, register7;
-    
-    //RESET
-    always @(*)
-    if (RESET==1)
-      begin
-        register0<=0;
-        register1<=0;
-        register2<=0;
-        register3<=0;
-        register4<=0;
-        register5<=0;
-        register6<=0;
-        register7<=0;
-      end
-        
       
     // Write functionality 
     always @(negedge CLK ) begin
-      if (CTRL==0)  begin
+      if (!busy_wait)  begin
         case (INaddr)
             0: begin 
                 register0 <= IN;
@@ -128,7 +112,6 @@ module regfile8x8a(IN, OUT1, OUT2, INaddr, OUT1addr, OUT2addr, CLK, RESET, CTRL)
     // always @ (posedge clk)
     // Read functionality
     always @(posedge CLK ) begin
-      if (CTRL==1) begin
         //OUT1
         case (OUT1addr)
           0: begin
@@ -187,6 +170,5 @@ module regfile8x8a(IN, OUT1, OUT2, INaddr, OUT1addr, OUT2addr, CLK, RESET, CTRL)
           default:
             OUT2 <= 0;
         endcase
-      end
     end
 endmodule
