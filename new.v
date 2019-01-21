@@ -584,39 +584,39 @@ module testbench;
 		reset = 0;
 		#20
 		
-		Read_Addr = 32'b0000000000000110xxxxxxxx00000111;//loadi r6,X,7
+		Read_Addr = 32'b00000000_00000110_xxxxxxxx_00000111;//loadi r6,X,7
 		$display("loadi reg6,X,7");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
-		Read_Addr = 32'b0000000000000011xxxxxxxx00000001;//loadi r3,X,1
+		Read_Addr = 32'b00000000_00000011_xxxxxxxx_00000001;//loadi r3,X,1
 		$display("loadi reg3,X,1");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
 
-		Read_Addr = 32'b0000010100011001xxxxxxxx00000110;//store 25,X,r6
+		Read_Addr = 32'b00000101_00011001_xxxxxxxx_00000110;//store 25,X,r6
 		$display("store mem[25],X,reg6");
 		#2000
 		$display("After 100 CC\nOUTPUT: %d\n",Result);
-		Read_Addr = 32'b0000010100011000xxxxxxxx00000011;//store 24,X,r3
+		Read_Addr = 32'b00000101_00011000_xxxxxxxx_00000011;//store 24,X,r3
 		$display("store mem[16],X,reg3");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result );
 		
-		Read_Addr = 32'b0000010000000111xxxxxxxx00011001;//load r7,X,25
+		Read_Addr = 32'b00000100_00000111_xxxxxxxx_00011001;//load r7,X,25
 		$display("load reg7,X,mem[25]");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
-		Read_Addr = 32'b0000010000001000xxxxxxxx00011000;//load r8,X,24
+		Read_Addr = 32'b00000100_00001000_xxxxxxxx_00011000;//load r8,X,24
 		$display("load reg8,X,mem[24]");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
 		
-		Read_Addr = 32'b0000000000000011xxxxxxxx00110001;//loadi r3,X,49
+		Read_Addr = 32'b00000000_00000011_xxxxxxxx_00110001;//loadi r3,X,49
 		$display("loadi reg[3],X,49");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
 		
-		Read_Addr = 32'b0000010100111000xxxxxxxx00000011;//store 56,X,r3
+		Read_Addr = 32'b00000101_00111000_xxxxxxxx_00000011;//store 56,X,r3
 		$display("store mem[56],X,reg3");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d",Result);
@@ -625,16 +625,16 @@ module testbench;
 		#2000
 		$display("200 clc cycles elapsed:\nOUTPUT: %d )\n",Result);
 		
-		Read_Addr = 32'b0000010000001000xxxxxxxx00111000;//load r8,X,56
+		Read_Addr = 32'b00000100_00001000_xxxxxxxx_00111000;//load r8,X,56
 		$display("load reg8,X,mem[56]");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
 		
-		Read_Addr = 32'b00000001000001010000011100001000;//add 5,7,8
+		Read_Addr = 32'b00000001_00000101_00000111_00001000;//add 5,7,8
 		$display("add reg5,reg7,reg8");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d (49+7)\n",Result);
-		Read_Addr = 32'b00001001000001010000100000000111;//sub 4,8,7
+		Read_Addr = 32'b00001001_00000101_00001000_00000111;//sub 4,8,7
 		$display("sub reg4,reg8,reg7");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d (49-7)\n",Result);
