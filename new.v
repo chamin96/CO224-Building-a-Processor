@@ -297,7 +297,7 @@ module CU(instruction, WAIT, OUT1addr, OUT2addr, INaddr, Imm, Select, add_mux, i
 endmodule
 
 //Data Memory
-module data_mem(clk, reset, read, write, address, write_data, read_data,	WAIT);
+module data_mem(clk, reset, read, write, address, write_data, read_data,WAIT);
 	input clk;
 	input reset;
 	input read;
@@ -353,8 +353,7 @@ module data_mem(clk, reset, read, write, address, write_data, read_data,	WAIT);
 endmodule
 
 // Data Memory Cache
-module data_cache(clk, reset, read, write, address, write_data, read_data, WAIT ,
-					dm_read, dm_write, dm_addr, dm_writeData, dm_readData, dm_busyWait);
+module data_cache(clk, reset, read, write, address, write_data, read_data, WAIT , dm_read, dm_write, dm_addr, dm_writeData, dm_readData, dm_WAIT);
 	input clk;
     input reset;
 	
@@ -370,7 +369,7 @@ module data_cache(clk, reset, read, write, address, write_data, read_data, WAIT 
     output [6:0] dm_addr;
     output [15:0] dm_writeData;
     input [15:0] dm_readData;
-	input dm_busyWait;
+	input dm_WAIT;
 
 	reg [15:0] dm_writeData;
 	reg [6:0] dm_addr;
@@ -378,7 +377,7 @@ module data_cache(clk, reset, read, write, address, write_data, read_data, WAIT 
 	reg [7:0] read_data;
 	wire WAIT;
 	
-	assign WAIT = dm_busyWait;
+	assign WAIT = dm_WAIT;
 
 	integer  i;
 
@@ -420,7 +419,7 @@ module data_cache(clk, reset, read, write, address, write_data, read_data, WAIT 
 	always @( clk ) begin
 	
 		if ( write && !read )begin			//Write to Data memory
-			if( hit && !dm_busyWait ) begin
+			if( hit && !dm_WAIT ) begin
 				if( flag ) begin				//IF fetching from DM is finished store in Cache
 					cache_ram[ 2*index ] = dm_readData[7:0];
 					cache_ram[ 2*index+1 ] = dm_readData[15:8];
@@ -434,7 +433,7 @@ module data_cache(clk, reset, read, write, address, write_data, read_data, WAIT 
                 //$display("MISS");
 				begin
 					@(posedge clk )begin
-						if( dirty[index] && !dm_busyWait ) begin
+						if( dirty[index] && !dm_WAIT ) begin
                             $display("dirty - Writing Back [Cache Module]");
 							dm_writeData[7:0] = cache_ram[ 2*index ];
 							dm_writeData[15:8] = cache_ram[ 2*index +1 ];
@@ -450,7 +449,7 @@ module data_cache(clk, reset, read, write, address, write_data, read_data, WAIT 
 				end
 				begin
 					@(negedge clk)begin
-						if( !dirty[index] && !dm_busyWait ) begin
+						if( !dirty[index] && !dm_WAIT ) begin
                             $display("Not Dirty - Fetching from memory [Cache Module]");
 							dm_addr = address[7:1];
 							dm_read = 1'b1;
@@ -465,7 +464,7 @@ module data_cache(clk, reset, read, write, address, write_data, read_data, WAIT 
 		end
 		
 		if ( !write && read ) begin		//Read from Data memory
-			if( hit && !dm_busyWait ) begin
+			if( hit && !dm_WAIT ) begin
 				if( flag ) begin				//IF fetching from DM is finished store in Cache
 					cache_ram[ 2*index ] = dm_readData[7:0];
 					cache_ram[ 2*index+1 ] = dm_readData[15:8];
@@ -478,7 +477,7 @@ module data_cache(clk, reset, read, write, address, write_data, read_data, WAIT 
                 //$display("MISS");
 				begin
 					@(posedge clk)begin
-						if( dirty[index] && !dm_busyWait ) begin
+						if( dirty[index] && !dm_WAIT ) begin
                             $display("Dirty - Writing Back [Cache Module]");
 							dm_writeData[7:0] = cache_ram[ 2*index ];
 							dm_writeData[15:8] = cache_ram[ 2*index +1 ];
@@ -495,7 +494,7 @@ module data_cache(clk, reset, read, write, address, write_data, read_data, WAIT 
 				end
 				begin
 					@(negedge clk)begin
-						if( !dirty[index] && !dm_busyWait ) begin
+						if( !dirty[index] && !dm_WAIT ) begin
                             $display("Not dirty - Fetching from Memory [Cache Module]");
 							dm_addr = address[7:1];
 							dm_read = 1'b1;
@@ -546,7 +545,7 @@ module Processor( Read_Addr, DataMemMUXout , clk, reset );
 	wire read, write, WAIT, reset;
 	wire [6:0] dm_addr;
 	wire [15:0] dm_writeData, dm_readData;
-	wire dm_read, dm_write, dm_busyWait;
+	wire dm_read, dm_write, dm_WAIT;
 	
 	Instruction_reg ir(clk, Read_Addr, instruction);				//Instruction Regiter
 	CU cu( instruction, WAIT, OUT1addr, OUT2addr, INaddr, Imm, Select, addSubMUX, imValueMUX, dmMUX, read, write, address );	//Control Unit
@@ -558,8 +557,8 @@ module Processor( Read_Addr, DataMemMUXout , clk, reset );
 	alu aluX( Result, imValueMUXout, OUT2, Select );				//alu
 	
 	data_cache cache( clk, reset, read, write, address, Result, read_data, WAIT ,
-					dm_read, dm_write, dm_addr, dm_writeData, dm_readData, dm_busyWait );		//Data Memory Cache
-	data_mem dataMem( clk, reset, dm_read, dm_write, dm_addr, dm_writeData, dm_readData, dm_busyWait);	//Data Memory
+					dm_read, dm_write, dm_addr, dm_writeData, dm_readData, dm_WAIT );		//Data Memory Cache
+	data_mem dataMem( clk, reset, dm_read, dm_write, dm_addr, dm_writeData, dm_readData, dm_WAIT);	//Data Memory
 
 endmodule
 
@@ -584,26 +583,26 @@ module testbench;
 		reset = 0;
 		#20
 		
-		Read_Addr = 32'b00000000_00000110_xxxxxxxx_00000111;//loadi r6,X,7
-		$display("loadi reg6,X,7");
+		Read_Addr = 32'b00000000_00000100_xxxxxxxx_00000111;//loadi r4,X,7
+		$display("loadi reg4,X,7");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
-		Read_Addr = 32'b00000000_00000011_xxxxxxxx_00000001;//loadi r3,X,1
-		$display("loadi reg3,X,1");
+		Read_Addr = 32'b00000000_00000110_xxxxxxxx_00000001;//loadi r6,X,1
+		$display("loadi reg6,X,1");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
 
-		Read_Addr = 32'b00000101_00011001_xxxxxxxx_00000110;//store 25,X,r6
-		$display("store mem[25],X,reg6");
+		Read_Addr = 32'b00000101_00011001_xxxxxxxx_00000100;//store 25,X,r4
+		$display("store mem[25],X,reg4");
 		#2000
 		$display("After 100 CC\nOUTPUT: %d\n",Result);
-		Read_Addr = 32'b00000101_00011000_xxxxxxxx_00000011;//store 24,X,r3
-		$display("store mem[16],X,reg3");
+		Read_Addr = 32'b00000101_00011000_xxxxxxxx_00000110;//store 24,X,r6
+		$display("store mem[16],X,reg6");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result );
 		
-		Read_Addr = 32'b00000100_00000111_xxxxxxxx_00011001;//load r7,X,25
-		$display("load reg7,X,mem[25]");
+		Read_Addr = 32'b00000100_00000001_xxxxxxxx_00011001;//load r1,X,25
+		$display("load reg1,X,mem[25]");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
 		Read_Addr = 32'b00000100_00001000_xxxxxxxx_00011000;//load r8,X,24
@@ -611,12 +610,12 @@ module testbench;
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
 		
-		Read_Addr = 32'b00000000_00000011_xxxxxxxx_00110001;//loadi r3,X,49
+		Read_Addr = 32'b00000000_00000011_xxxxxxxx_00110001;//loadi r6,X,49
 		$display("loadi reg[3],X,49");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
 		
-		Read_Addr = 32'b00000101_00111000_xxxxxxxx_00000011;//store 56,X,r3
+		Read_Addr = 32'b00000101_00111000_xxxxxxxx_00000011;//store 56,X,r6
 		$display("store mem[56],X,reg3");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d",Result);
@@ -630,12 +629,12 @@ module testbench;
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d\n",Result);
 		
-		Read_Addr = 32'b00000001_00000101_00000111_00001000;//add 5,7,8
-		$display("add reg5,reg7,reg8");
+		Read_Addr = 32'b00000001_00000101_00000001_00001000;//add reg5,reg1,reg8
+		$display("add reg5,reg1,reg8");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d (49+7)\n",Result);
-		Read_Addr = 32'b00001001_00000101_00001000_00000111;//sub 4,8,7
-		$display("sub reg4,reg8,reg7");
+		Read_Addr = 32'b00001001_00000101_00001000_00000001;//sub reg4,reg8,reg1
+		$display("sub reg4,reg8,reg1");
 		#20
 		$display("1 clk cycle elapsed:\nOUTPUT: %d (49-7)\n",Result);
 
