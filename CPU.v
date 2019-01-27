@@ -535,6 +535,21 @@ module Processor( Read_Addr, DataMemMUXout , clk, reset );
 
 endmodule
 
+// Instruction Memory Module
+module Instruction_memory(clk, ADDRESS,READ, READ_INST, WAIT);
+	input clk;
+	input READ;
+	input[7:0] ADDRESS;
+	output[31:0] READ_INST;
+	output WAIT;
+
+	reg WAIT = 1'b0;
+	reg[31:0] READ_INST;
+	
+endmodule // Instruction_memory
+
+
+// Testbench
 module testbench;
 	reg [31:0] Read_Addr;
 	wire [7:0] Result;
