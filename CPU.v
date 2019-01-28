@@ -211,7 +211,7 @@ module Instruction_reg ( clk, Read_Addr, instruction );
 
 	always @(negedge clk)
 	begin
-	instruction = Read_Addr;
+		instruction = Read_Addr;
 	end
 endmodule
 
@@ -545,7 +545,38 @@ module Instruction_memory(clk, ADDRESS,READ, READ_INST, WAIT);
 
 	reg WAIT = 1'b0;
 	reg[31:0] READ_INST;
-	
+
+	//declare memory 256x32 bits
+	reg [31:0] inst_arr [255:0];
+
+	//hardcoded Instructions
+	initial begin
+	inst_arr[0]=32'b00000000000001000000000000000111;	//loadi 4 X 0x07
+	inst_arr[1]=32'b00000000000001100000000000000001;	//loadi 6 X 0x01
+	inst_arr[2]=32'b00000101001000110000000000000100;	//store 0x23 X 4
+	inst_arr[3]=32'b00000101001000100000000000000110;	//store 0x22 X 6
+	inst_arr[4]=32'b00000100000000010000000000100011;	//load 1 X 0x23
+	inst_arr[5]=32'b00000100000001110000000000100010;	//load 7 X 0x22
+	inst_arr[6]=32'b00000000000000110000000000011110;	//loadi 3 X 0x1E
+	inst_arr[7]=32'b00000101001110000000000000000011;	//store 0x38 X 3
+	inst_arr[8]=32'b00000100000001110000000000111000;	//load 7 X 0x38
+	inst_arr[9]=32'b00000001000001010000000100000111;	//add 5 1 7
+	inst_arr[10]=32'b00001001000001000000011100000001;	//sub 4 7 1
+	end
+
+	always @(READ,ADDRESS) begin
+		if(READ) begin
+		  WAIT <= 1;
+		  //Artificial delay 98 cycles
+		  repeat(98)
+		  begin
+		  	@(posedge clk);
+		  end
+		  $display("reading from Instruction Memory [Instruction Memory Module]");
+		  READ_INST = inst_arr[ADDRESS];
+		  WAIT <= 0;
+		end
+	end
 endmodule // Instruction_memory
 
 
