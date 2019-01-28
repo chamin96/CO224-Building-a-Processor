@@ -159,7 +159,7 @@ module counter(clk, reset, Read_addr, WAIT);
 	input clk;
 	input reset;
 	input WAIT;
-	output [31:0] Read_addr;
+	output [7:0] Read_addr;
 	reg Read_addr;
 
 	always @(negedge clk)
@@ -167,10 +167,10 @@ module counter(clk, reset, Read_addr, WAIT);
 		if ( !WAIT ) begin
 			case(reset)
 				1'b1 : begin
-                    Read_addr = 32'd0;
+                    Read_addr = 7'd0;
                     end	//reset
 				1'b0 : begin
-                    Read_addr = Read_addr + 3'b100;
+                    Read_addr = Read_addr + 1;
                     end	//otherwise
 			endcase
 		end
@@ -519,6 +519,7 @@ module Processor( Read_Addr, DataMemMUXout , clk, reset );
 	wire [6:0] dm_addr;
 	wire [15:0] dm_writeData, dm_readData;
 	wire dm_read, dm_write, dm_WAIT;
+	// wire Read_addr;
 
 	Instruction_reg ir(clk, Read_Addr, instruction);				                            // Instruction Regiter
 	CU cu( instruction, WAIT, OUT1addr, OUT2addr, INaddr, Imm, Select,
@@ -532,6 +533,8 @@ module Processor( Read_Addr, DataMemMUXout , clk, reset );
 	Cache_memory cache( clk, reset, read, write, address, Result, read_data, WAIT ,
 					dm_read, dm_write, dm_addr, dm_writeData, dm_readData, dm_WAIT );		      // Cache Memory Module
 	data_mem dataMem( clk, reset, dm_read, dm_write, dm_addr, dm_writeData, dm_readData, dm_WAIT);// Data Memory Module
+	// counter count(clk, reset, Read_addr, WAIT);	//program counter
+	// Instruction_memory inMem(clk, ADDRESS,READ, READ_INST, WAIT);	//Instruction Memory
 
 endmodule
 
